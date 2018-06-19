@@ -1,0 +1,59 @@
+<main>
+  <section class="timer-section">
+    <div class="timer-section_container">
+      <div class="timer-section_container_inner">
+        <h3  *ngIf="!timerSet">Please set your countdown</h3>
+        <h3  *ngIf="timerSet">Your countdown timer is set to <br/><strong>{{countdownTime.date}}, &nbsp;&nbsp;{{countdownTime.time}}</strong></h3>
+        <div *ngIf="!timerSet" class="timer-section_container_content">
+          <form #inputTimerForm="ngForm">
+            <div class="timer-section_container_content_input">
+              <span [ngClass]="submitForm && (!inputTimerForm.controls.hours.touched || !inputTimerForm.controls.hours.valid) ? 'in-valid' : 'valid'">
+                <input name="hours" type="number" required min="0" placeholder="Hours" ngModel #hours="ngModel">
+              </span>
+              <span [ngClass]="submitForm && (!inputTimerForm.controls.minutes.touched || !inputTimerForm.controls.minutes.valid) ? 'in-valid' : 'valid'">
+                <input name="minutes" type="number" required min="0" max="59" placeholder="Minutes" ngModel #minutes="ngModel">
+              </span>
+              <span [ngClass]="submitForm && (!inputTimerForm.controls.seconds.touched || !inputTimerForm.controls.seconds.valid) ? 'in-valid' : 'valid'">
+                <input name="seconds" type="number" required min="0" max="59" placeholder="Seconds" ngModel #seconds="ngModel">
+              </span>
+            </div>
+          </form>  
+          <div *ngIf="submitForm && formError" class="error">
+            Please enter valid time.
+          </div>
+          <div class="timer-section_container_content_action">
+            <span (click)="setTimer(inputTimerForm)">set timer</span>
+            <span (click)="clearTimer(inputTimerForm)">clear</span>
+          </div>
+        </div>
+        <div *ngIf="timerSet" class="timer-section_container_countdown">
+          <div class="timer-section_container_countdown_content">
+            <div>
+              <span>Hours</span>
+              <span>{{countdownHours}}</span>
+            </div>
+            <div>
+              <span>Minutes</span>
+              <span>{{countdownMinutes}}</span>
+            </div>
+            <div>
+              <span>Seconds</span>
+              <span>{{countdownSeconds}}</span>
+            </div>
+          </div>
+          <div class="timer-section_container_countdown_action">
+            <span (click)="resetTimer()">reset timer</span>
+          </div>
+        </div>
+      </div>  
+    </div>
+    <div *ngIf="countdownEnd" class="timer-notify">
+      <div class="bgMask"></div>
+      <div class="notify-message">
+        <span (click)="startNewTimer()">close</span>
+        <p>You have reached the end of your countdown. Please start a new timer.</p>
+        <button (click)="startNewTimer()">start new timer</button>
+      </div>
+    </div>
+  </section>
+</main>
