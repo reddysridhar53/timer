@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ElementRef } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Observable } from 'rxjs/Rx';
 
@@ -18,7 +18,8 @@ export class AppComponent implements OnInit {
   private countdownTime: any = {};
   private timerObservable: any;
   private countdownEnd: boolean;
-  constructor() {}
+  private audioContent: any;
+  constructor(private ele: ElementRef) {}
 
   ngOnInit(): void {
     this.countdownEnd = false;
@@ -77,6 +78,13 @@ export class AppComponent implements OnInit {
     this.countdownMinutes = 0;
     this.countdownSeconds = 0;
     this.countdownEnd = true;
+    this.audioContent = this.ele.nativeElement.querySelector('#audioTag');
+    if (this.audioContent && this.audioContent.play) {
+      this.audioContent.play();
+    } else {
+      this.audioContent = new this.audioContent('../assets/alarm.mp3');
+      this.audioContent.play();
+    }
   }
   private _showCountdown(time: number) {
     this.countdownHours = this._calHours(time);
@@ -102,6 +110,10 @@ export class AppComponent implements OnInit {
   startNewTimer(): void {
     this.resetTimer();
     this.countdownEnd = false;
+    if (this.audioContent) {
+      this.audioContent.pause();
+      this.audioContent.currentTime = 0;
+    }
   }
   resetTimer(): void {
     this.timerSet = false;
